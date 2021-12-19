@@ -62,12 +62,15 @@ task('db:cmd:pull', function() {
     runLocally('wp db import .data/db_backups/' . get('dump_file'));
     runLocally('wp search-replace ' . get('remote_url') . ' ' . get('local_url'));
     runLocally('rm -f .data/db_backups/' . get('dump_file'));
+})->desc('Imports DB');
+
+//RESET DB
+task('db:cmd:reset', function() {
+    writeln('<comment>> Removes production env variables from imported file </comment>');
 
     // assumes this file exists in this path on the ntk repo
-    runLocally('wp db query < migrations/dev/reset_db_for_local.sql');
-
-
-})->desc('Imports DB');
+    runLocally('wp db query < ./migrations/dev/reset_db_for_local.sql');
+})->desc('Reset DB');
 
 // PUSH DB
 
@@ -130,5 +133,6 @@ task('db:push', [
 
 task('db:pull', [
     'db:remote:backup',
-    'db:cmd:pull'
+    'db:cmd:pull',
+    'db:cmd:reset'
 ]);
