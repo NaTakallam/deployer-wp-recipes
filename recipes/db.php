@@ -63,6 +63,10 @@ task('db:cmd:pull', function() {
     runLocally('wp search-replace ' . get('remote_url') . ' ' . get('local_url'));
     runLocally('rm -f .data/db_backups/' . get('dump_file'));
 
+    // assumes this file exists in this path on the ntk repo
+    runLocally('wp db query < migrations/dev/reset_db_for_local.sql');
+
+
 })->desc('Imports DB');
 
 // PUSH DB
